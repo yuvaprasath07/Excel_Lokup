@@ -53,7 +53,32 @@ namespace DataLayer
             "Contract_Company Name (kana)*", "Request_Department/Affiliation**",
             "request_person in charge name*", "Request_person in charge name (kana)*",
             "request_postal code*", "Request_Address 1 (Prefecture + City)*",
-            "Request_Address 2 (Municipality)", "Request _ chome","Contract billing address ","contract number3","Contract_Building name","building","billing room","request_phone number*","Request_FAX","Request_E Mail Address*","Payment Method*","Billing method*","Newly established","New continuation category","Enrollment R 1) 1*","Registered Kana*","Service_zip code*","Service_address 1 (prefecture + city)*","Service_ Address 2 (town/village)*","Service _ chome","service address","Service_go","_ building name","service building","service room","SPID*","area*","Name of facility*","Quotation No*","SalesforceID (demand base)","Scheduled supply start date*","Weighing day*","Contract Term*","Main contract system*","main fee structure*","load pattern*","Contracts1*","Utility*","Rate Menu","Salesforce ID (plan)","contract binding period*","Contract automatic renewal category*","Estimate*","Tax Rate*","Contract start date*","Contract end date*","Contract change date","Old invoice Contract name","Current Supply Class","Current contract power","Current Retailer Name","Current Retailer Customer Number","Current base contract power","Current base contract supply company name","Current base contract customer number","demand window_company name*","Kisumo_Company Name Kana*","Demand window_person in charge name*","Demand window_person in charge name in kana*","Sales window_department/affiliation*","demand window_postal code*","Demand window_address 1 (prefecture + city)*","Demand window_address 2 (town/village)*","demand window _ chome","demand window address","demand window _ number","Demand window_Building name","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",
+            "Request_Address 2 (Municipality)", "Request _ chome","Contract billing address ","contract number3",
+            "Contract_Building name","building","billing room","request_phone number*",
+            "Request_FAX","Request_E Mail Address*","Payment Method*","Billing method*",
+            "Newly established","New continuation category","Enrollment R 1) 1*",
+            "Registered Kana*","Service_zip code*","Service_address 1 (prefecture + city)*",
+            "Service_ Address 2 (town/village)*","Service _ chome","service address",
+            "Service_go","_ building name","service building","service room","SPID*",
+            "area*","Name of facility*","Quotation No*","SalesforceID (demand base)",
+            "Scheduled supply start date*","Weighing day*","Contract Term*","Main contract system*",
+            "main fee structure*","load pattern*","Contracts1*","Utility*","Rate Menu","Salesforce ID (plan)",
+            "contract binding period*","Contract automatic renewal category*","Estimate*","Tax Rate*","Contract start date*",
+            "Contract end date*","Contract change date","Old invoice Contract name",
+            "Current Supply Class","Current contract power","Current Retailer Name","Current Retailer Customer Number",
+            "Current base contract power","Current base contract supply company name","Current base contract customer number","demand window_company name*",
+            "Kisumo_Company Name Kana*","Demand window_person in charge name*","Demand window_person in charge name in kana*","Sales window_department/affiliation*","demand window_postal code*",
+            "Demand window_address 1 (prefecture + city)*","Demand window_address 2 (town/village)*","demand window _ chome","demand window address","demand window _ number","Demand window_Building name",
+            "demand window _ building","demand window _ room","demand window_telephone number*","Demand window_FAX","demand window_email address*","technique_company name ","Technique_Company Name Kana","Technique_person in charge name",
+            "Tech_Person in charge Name Kana","Technology_Department/Affiliation",
+            "technique_phone number","Renewable energy surcharge exemption target category*","Renewable energy surcharge exemption rate","Renewable energy surcharge exemption start date",
+            "Renewable energy surcharge exemption end date","Environment menu target category*","initiative","environmental value","Power configuration","Certificate usage","Renewable energy ratio","Contracts2","Renewable energy supply start date","Renewable energy supply end date","main_supply voltage*",
+            "Main_metering voltage*","Main_supply category*","Selected when main_partial supply","Main contract power*","main_base contract power","main_basic unit price*","Wheeling contract power","main_general unit price","main_weekday unit price","Main_daytime unit price","Main_weekend unit price","Main_night unit price","Main_holiday unit price",
+            "Main_Heavy load unit price","main_peak unit price","Main_summer unit price","Main_other season unit price","Main_summer weekday unit price","Main_other season weekday unit price","Main_summer daytime unit price",
+            "Main_other season daytime unit price","Main_summer holiday unit price","Main_other season holiday unit price","Spare line target classification*","Reserve line_contract power","Backup line_basic unit price","Spare line_supply voltage","Spare line_metering voltage","Standby power supply target category*",
+            "Standby power source_Contract power","Standby power supply_basic charge unit price","Standby power source_supply voltage","Standby power supply_metering voltage","Self-supporting target classification*","Self-supplementary_reference power","Self-supplementary power contract","Self-supplementary power calculation method","Self-support_contract system",
+            "Self-supplement_Monthly basic charge unit price","Private Supplement_Monthly basic charge unit price when not in use",
+            "Self-supplementary _ regular summer unit price","Private Supplement_Irregular Summer Unit Price","Private Supplement_Regular Other Seasonal Unit Price","Self-supplementary_irregular other seasonal unit price","Fee unit price","Partition basic charge unit price","Customer Number","Billing Account Number",
         };
 
                 for (int i = 0; i < columnHeaders.Length; i++)
@@ -92,9 +117,9 @@ namespace DataLayer
 
                 var range = sheet2.Cells["A1:Z1"];
                 range.Style.Font.Bold = true;
-                var headerStyle = sheet1.Cells["A1:AZ1"].Style;
+                var headerStyle = sheet1.Cells["A1:GH1"].Style;
                 headerStyle.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                headerStyle.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                headerStyle.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkGray);
 
                 var Area = _dbContext.L_Area.ToList();
                 var SelfSupplementary = _dbContext.L_SelfSupplementaryPowerCalculationMethod.ToList();
