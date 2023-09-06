@@ -12,12 +12,27 @@ namespace Excel_Lokup.Controllers
         public LokupController(IDatalayer datalayer)
         {
             this.datalayer = datalayer;
+            
         }
         [HttpGet("BatchEnrollment")]
         public IActionResult Excellooup()
         {
             var data = datalayer.GetExcelLokup();
             return Ok();
+        }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            try
+            {
+                var fileName = datalayer.UploadFileAsync(file);
+                return Ok($"File uploaded and saved as {fileName}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

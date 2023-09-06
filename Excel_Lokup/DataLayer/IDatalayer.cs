@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace DataLayer
     public interface IDatalayer
     {
         public object GetExcelLokup();
+
+        public object UploadFileAsync(IFormFile file);
     }
 }

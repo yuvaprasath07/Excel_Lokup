@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using Entity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
@@ -384,5 +385,37 @@ namespace DataLayer
 
 
         }
+
+        public object UploadFileAsync(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    throw new ArgumentException("No file uploaded.");
+                }
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                     file.CopyToAsync(stream);
+                }
+
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("File upload failed: " + ex.Message);
+            }
+        }
+
+     
     }
 }
