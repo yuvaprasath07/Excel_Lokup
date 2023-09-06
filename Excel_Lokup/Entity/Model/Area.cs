@@ -13,7 +13,5 @@ namespace Entity.Model
     {
         [Key]
         public string? Description { get; set; }
-
-
     }
 }
