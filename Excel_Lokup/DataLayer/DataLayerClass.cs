@@ -1,17 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Entity;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
-using OfficeOpenXml;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+
 
 namespace DataLayer
 {
@@ -388,34 +378,102 @@ namespace DataLayer
 
         public object UploadFileAsync(IFormFile file)
         {
+            string filePath = @"D:\Csharpwork\Filupload.xlsx";
+            string[] columnHeaders = {
+            "contractor id", "Customer code", "Public office/private sector*",
+            "Customer type*", "Corporate Name*", "Corporate Name Kana*",
+            "contract_postal code*", "Contract_Address 1 (Prefecture + City)*",
+            "Contract_Address 2 (Municipality)*", "Contract _ chome",
+            "contract address1", "contract number1", "contract_building name",
+            "contract building", "contract room1", "Contract_person in charge name*",
+            "Contract_person in charge name (Kana)*", "Contract_Department/Affiliation*",
+            "contract_phone number*", "Contract_FAX", "E Mail Address*",
+            "SalesforceID (issue)", "Project No.", "Project Title",
+            "SalesforceID (account)", "contract_company name*",
+            "Contract delivery_Company name Kana*",
+            "Contract delivery_person in charge name*",
+            "Contract delivery_person in charge name (Kana)*",
+            "Contract delivery_Department/Affiliation*",
+            "Contract delivery_postal code*",
+            "Contract delivery address 1 (prefecture + city)*",
+            "Contract delivery_address 2 (town/village)*",
+            "contract _ chome", "contract address2", "contract number2",
+            "Contract delivery_building name", "contract delivery _ building",
+            "contract room2", "contract_telephone number*", "Contract delivery_FAX",
+            "contract_email address*", "billing address", "Contract_Company name*",
+            "Contract_Company Name (kana)*", "Request_Department/Affiliation**",
+            "request_person in charge name*", "Request_person in charge name (kana)*",
+            "request_postal code*", "Request_Address 1 (Prefecture + City)*",
+            "Request_Address 2 (Municipality)", "Request _ chome","Contract billing address ","contract number3",
+            "Contract_Building name","building","billing room","request_phone number*",
+            "Request_FAX","Request_E Mail Address*","Payment Method*","Billing method*",
+            "Newly established","New continuation category","Enrollment R 1) 1*",
+            "Registered Kana*","Service_zip code*","Service_address 1 (prefecture + city)*",
+            "Service_ Address 2 (town/village)*","Service _ chome","service address",
+            "Service_go","_ building name","service building","service room","SPID*",
+            "area*","Name of facility*","Quotation No*","SalesforceID (demand base)",
+            "Scheduled supply start date*","Weighing day*","Contract Term*","Main contract system*",
+            "main fee structure*","load pattern*","Contracts1*","Utility*","Rate Menu","Salesforce ID (plan)",
+            "contract binding period*","Contract automatic renewal category*","Estimate*","Tax Rate*","Contract start date*",
+            "Contract end date*","Contract change date","Old invoice Contract name",
+            "Current Supply Class","Current contract power","Current Retailer Name","Current Retailer Customer Number",
+            "Current base contract power","Current base contract supply company name","Current base contract customer number","demand window_company name*",
+            "Kisumo_Company Name Kana*","Demand window_person in charge name*","Demand window_person in charge name in kana*","Sales window_department/affiliation*","demand window_postal code*",
+            "Demand window_address 1 (prefecture + city)*","Demand window_address 2 (town/village)*","demand window _ chome","demand window address","demand window _ number","Demand window_Building name",
+            "demand window _ building","demand window _ room","demand window_telephone number*","Demand window_FAX","demand window_email address*","technique_company name ","Technique_Company Name Kana","Technique_person in charge name",
+            "Tech_Person in charge Name Kana","Technology_Department/Affiliation",
+            "technique_phone number","Renewable energy surcharge exemption target category*","Renewable energy surcharge exemption rate","Renewable energy surcharge exemption start date",
+            "Renewable energy surcharge exemption end date","Environment menu target category*","initiative","environmental value","Power configuration","Certificate usage","Renewable energy ratio","Contracts2","Renewable energy supply start date","Renewable energy supply end date","main_supply voltage*",
+            "Main_metering voltage*","Main_supply category*","Selected when main_partial supply","Main contract power*","main_base contract power","main_basic unit price*","Wheeling contract power","main_general unit price","main_weekday unit price","Main_daytime unit price","Main_weekend unit price","Main_night unit price","Main_holiday unit price",
+            "Main_Heavy load unit price","main_peak unit price","Main_summer unit price","Main_other season unit price","Main_summer weekday unit price","Main_other season weekday unit price","Main_summer daytime unit price",
+            "Main_other season daytime unit price","Main_summer holiday unit price","Main_other season holiday unit price","Spare line target classification*","Reserve line_contract power","Backup line_basic unit price","Spare line_supply voltage","Spare line_metering voltage","Standby power supply target category*",
+            "Standby power source_Contract power","Standby power supply_basic charge unit price","Standby power source_supply voltage","Standby power supply_metering voltage","Self-supporting target classification*","Self-supplementary_reference power","Self-supplementary power contract","Self-supplementary power calculation method","Self-support_contract system",
+            "Self-supplement_Monthly basic charge unit price","Private Supplement_Monthly basic charge unit price when not in use",
+            "Self-supplementary _ regular summer unit price","Private Supplement_Irregular Summer Unit Price","Private Supplement_Regular Other Seasonal Unit Price","Self-supplementary_irregular other seasonal unit price","Fee unit price","Partition basic charge unit price","Customer Number","Billing Account Number",
+        };
             try
             {
                 if (file == null || file.Length == 0)
                 {
-                    throw new ArgumentException("No file uploaded.");
+                    return "No file uploaded.";
                 }
-                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
-
-                if (!Directory.Exists(uploadPath))
-                {
-                    Directory.CreateDirectory(uploadPath);
-                }
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                var filePath = Path.Combine(uploadPath, fileName);
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                     file.CopyToAsync(stream);
+                    file.CopyTo(stream);
                 }
 
-                return filePath;
+                using (var uploadedWorkbook = new XLWorkbook(filePath))
+                {
+                    var worksheet = uploadedWorkbook.Worksheets.FirstOrDefault();
+                    var uploadedHeaders = worksheet?.Row(1).CellsUsed().Select(cell => cell.Value.ToString().ToLower()).ToList();
+
+
+                    if (uploadedHeaders == null || !uploadedHeaders.SequenceEqual(columnHeaders.Select(header => header.ToLower()).ToList()))
+                    {
+                        string mismatchedHeaders = "Mismatched headers. Example of expected headers:\n";
+
+                        for (int i = 0; i < columnHeaders.Length; i++)
+                        {
+                            if (uploadedHeaders == null || i >= uploadedHeaders.Count || !uploadedHeaders[i].Equals(columnHeaders[i].ToLower()))
+                            {
+                                mismatchedHeaders += $"{i + 1}. {columnHeaders[i]}\n";
+                            }
+                        }
+
+                        File.Delete(filePath);
+                        return mismatchedHeaders;
+                    }
+
+                    return $"File uploaded to: {filePath}";
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception("File upload failed: " + ex.Message);
+                return $"Internal server error: {ex.Message}";
             }
         }
-
-     
     }
 }
+
+

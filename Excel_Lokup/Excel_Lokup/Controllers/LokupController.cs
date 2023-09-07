@@ -24,15 +24,12 @@ namespace Excel_Lokup.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-            try
+            var fileName = datalayer.UploadFileAsync(file);
+            if (fileName != null)
             {
-                var fileName = datalayer.UploadFileAsync(file);
-                return Ok($"File uploaded and saved as {fileName}");
+                return Ok(fileName);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
+            return StatusCode(400, "File Not Match");
         }
     }
 }
