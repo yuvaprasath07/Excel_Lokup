@@ -25,7 +25,11 @@ namespace Excel_Lokup.Controllers
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             var fileName = datalayer.UploadFileAsync(file);
-            if (fileName != null)
+            if (fileName is List<string> differences)
+            {
+                return BadRequest(new { Message = "Column name differences detected", Differences = differences });
+            }
+            else if (fileName != null)
             {
                 return Ok(fileName);
             }

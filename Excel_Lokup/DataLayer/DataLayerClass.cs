@@ -449,18 +449,25 @@ namespace DataLayer
                     var uploadedHeaders = worksheet?.Row(1).CellsUsed().Select(cell => cell.Value.ToString().ToLower()).ToList();
 
 
-                    if (uploadedHeaders == null || !uploadedHeaders.SequenceEqual(columnHeaders.Select(header => header.ToLower()).ToList()))
-                    {
-                        string mismatchedHeaders = "Mismatched headers. Example of expected headers:\n";
+                    List<string> mismatchedHeaders = new List<string>();
 
+                    if (uploadedHeaders == null || uploadedHeaders.Count != columnHeaders.Length)
+                    {
+                        mismatchedHeaders.Add("Mismatched header count.");
+                    }
+                    else
+                    {
                         for (int i = 0; i < columnHeaders.Length; i++)
                         {
-                            if (uploadedHeaders == null || i >= uploadedHeaders.Count || !uploadedHeaders[i].Equals(columnHeaders[i].ToLower()))
+                            if (!uploadedHeaders[i].Equals(columnHeaders[i].ToLower()))
                             {
-                                mismatchedHeaders += $"{i + 1}. {columnHeaders[i]}\n";
+                                mismatchedHeaders.Add($"{i + 1}. {columnHeaders[i]}");
                             }
                         }
+                    }
 
+                    if (mismatchedHeaders.Count > 0)
+                    {
                         File.Delete(filePath);
                         return mismatchedHeaders;
                     }
